@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>timenote2Markdown | 将 记时光 数据文件导出为 Markdown</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://static.evax.top/css/pico.min.css">
+    <script src="/timenote2Markdown.js"></script>
+    <script src="https://static.evax.top/js/jszip.min.js"></script>
+    <script src="https://static.evax.top/js/FileSaver.js"></script>
+    <style>
+        footer {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<main class="container">
+    <hgroup>
+        <h1>timenote2Markdown</h1>
+        <h2>将 记时光 数据文件导出为 Markdown</h2>
+    </hgroup>
+    <article>
+
+        <p>
+            <strong>注意: </strong>请尽量不要使用任何第三方下载器! 如果转换失败, 建议使用 Edge / Firefox / Chrome 等浏览器.
+        </p>
+
+        <div class="div_file_input">
+            <label for="file_input">选择 JSON 文件</label>
+            <input type="file" id="file_input" accept=".json">
+
+        </div>
+
+        <div class="grid">
+            <button id="btn_convert">转换</button>
+            <script>
+                const btn_convert = document.getElementById('btn_convert');
+                btn_convert.addEventListener('click', function () {
+                    const opt = window.t2m.getMarkdowns()
+                    const zip = new JSZip()
+                    for (let i in opt) {
+                        zip.file(i, opt[i])
+                    }
+                    zip.generateAsync({type: 'blob'}).then(function (content) {
+                        saveAs(content, 'timenote2Markdown.zip')
+                    })
+                })
+            </script>
+        </div>
+        <div>
+            <p>文章列表:</p>
+            <ul id="ul_article_list"></ul>
+        </div>
+
+        <script>
+            const file_input = document.getElementById('file_input');
+            const show_list = document.getElementById('ul_article_list');
+            file_input.addEventListener('change', function () {
+                const reader = new FileReader()
+                reader.onload = function (e) {
+                    const fileContent = e.target.result
+                    const json = JSON.parse(fileContent)
+                    window.t2m = new Timenote2Markdown(json)
+                    window.t2m.showNotes(show_list)
+                }.bind(this)
+                if (file_input.files[0]) {
+                    reader.readAsText(file_input.files[0])
+                }
+            })
+        </script>
+
+    </article>
+</main>
+
+</body>
+</html>
