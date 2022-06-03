@@ -1,7 +1,25 @@
+const weatherMap = {
+    104: '阴',
+    150: '晴',
+    250: '大风',
+    350: '下雪',
+    450: '下雨',
+}
+const moodMap = {
+    "MOOD_UNKNOWN": '未知',
+    "MOOD_HAPPY": '开心',
+    "MOOD_SAD": '难过',
+    "MOOD_ANGRY": '生气',
+    "MOOD_GLOOMY": '阴沉',
+    "MOOD_NORMAL": '一般',
+}
+
+
 class Timenote2Markdown {
 
     fileContent
     notes
+    categories
 
     /**
      *
@@ -14,6 +32,14 @@ class Timenote2Markdown {
             const d = this.fileContent[i]
             if (d["name"] === "note") {
                 this.notes = d["data"]
+            }
+            if (d["name"] === "category") {
+                const tempData = d["data"]
+                this.categories = {}
+                for (const i in tempData) {
+                    const d = tempData[i]
+                    this.categories[d["id"]] = [d["categoryName"], d["categoryDesc"]]
+                }
             }
         }
     }
@@ -43,10 +69,21 @@ class Timenote2Markdown {
             const date = new Date(note["time"])
             const date_str = date.toISOString()
             const date_ymd = date_str.substring(0, 10)
+            let category = this.categories[note["categoryId"]]
+            if (!category) {
+                category = ["未分类", ""]
+            }
+
             const name = date_ymd + " " + note["title"] + ".md"
+
             let content = "---\n";
             content += "title: " + note["title"] + "\n"
             content += "date: " + date_str + "\n"
+            content += "categories: " + category[0] + "\n"
+            content += "categories_desc: " + category[1] + "\n"
+            content += "location: " + note["location"] + "\n"
+            content += "weather: " + weatherMap[note["weather"]] + "\n"
+            content += "mood: " + moodMap[note["mood"]] + "\n"
             content += "---\n"
             content += note["content"]
             opt[name] = content
