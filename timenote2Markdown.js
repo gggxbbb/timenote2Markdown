@@ -23,6 +23,7 @@ class Timenote2Markdown {
      * @param target{HTMLElement}
      */
     showNotes(target) {
+        target.innerHTML = ""
         const notes = this.notes
         for (const i in notes) {
             const note = notes[i]
