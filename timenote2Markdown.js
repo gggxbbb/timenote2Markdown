@@ -39,12 +39,12 @@ class Timenote2Markdown {
     getMarkdowns() {
         const opt = {}
         this.notes.forEach(note => {
-            let content = "---\n";
-            content += "title: " + note["title"] + "\n"
-            const date = new Date(note["time"] / 1000)
+            const date = new Date(note["time"])
             const date_str = date.toISOString()
             const date_ymd = date_str.substring(0, 10)
             const name = date_ymd + " " + note["title"] + ".md"
+            let content = "---\n";
+            content += "title: " + note["title"] + "\n"
             content += "date: " + date_str + "\n"
             content += "---\n"
             content += note["content"]
