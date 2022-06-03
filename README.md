@@ -14,3 +14,11 @@
 
 1. 项目网页中引入了流量统计代码, 如介意可将项目克隆到本地、删除统计代码后再使用.
 2. 请不要使用插件劫持浏览器下载功能, 否则可能导致转换失败.
+
+## 项目依赖
+
+1. [picocss](https://picocss.com/) - 前端 CSS.
+2. [JSZip](https://stuk.github.io/jszip/) - 压缩文件.
+3. [FileSaver.js](https://github.com/eligrey/FileSaver.js) - 保存文件.
+
+由于某些众所周知的原因, 本项目中未使用 jsDelivr 的 CDN, 而是使用了个人托管的静态资源.
