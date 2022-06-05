@@ -17,28 +17,28 @@ const moodMap = {
 
 class Timenote2Markdown {
 
-    fileContent
-    notes
-    categories
+    #fileContent
+    #notes
+    #categories
 
     /**
-     *
-     * @param fileContent{Array}
+     * 构造函数
+     * @param fileContent{Object} 文件内容
      */
     constructor(fileContent) {
-        this.fileContent = fileContent["tables"]
-        this.notes = []
-        for (const i in this.fileContent) {
-            const d = this.fileContent[i]
+        this.#fileContent = fileContent["tables"]
+        this.#notes = []
+        for (const i in this.#fileContent) {
+            const d = this.#fileContent[i]
             if (d["name"] === "note") {
-                this.notes = d["data"]
+                this.#notes = d["data"]
             }
             if (d["name"] === "category") {
                 const tempData = d["data"]
-                this.categories = {}
+                this.#categories = {}
                 for (const i in tempData) {
                     const d = tempData[i]
-                    this.categories[d["id"]] = [d["categoryName"], d["categoryDesc"]]
+                    this.#categories[d["id"]] = [d["categoryName"], d["categoryDesc"]]
                 }
             }
         }
@@ -50,7 +50,7 @@ class Timenote2Markdown {
      */
     showNotes(target) {
         target.innerHTML = ""
-        const notes = this.notes
+        const notes = this.#notes
         for (const i in notes) {
             const note = notes[i]
             const noteElement = document.createElement("li")
@@ -65,17 +65,17 @@ class Timenote2Markdown {
      */
     getMarkdowns() {
         const opt = {}
-        this.notes.forEach(note => {
+        this.#notes.forEach(note => {
             const date = new Date(note["time"])
             const date_str = date.toISOString()
             const date_ymd = date_str.substring(0, 10)
 
-            let category = this.categories[note["categoryId"]]
+            let category = this.#categories[note["categoryId"]]
             if (!category) {
                 category = ["未分类", ""]
             }
 
-            const fixed_content = note["content"].replace("](assets:///","](./assets/")
+            const fixed_content = note["content"].replace("](assets:///", "](./assets/")
 
             const name = date_ymd + " " + note["title"] + ".md"
 
