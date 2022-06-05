@@ -69,10 +69,13 @@ class Timenote2Markdown {
             const date = new Date(note["time"])
             const date_str = date.toISOString()
             const date_ymd = date_str.substring(0, 10)
+
             let category = this.categories[note["categoryId"]]
             if (!category) {
                 category = ["未分类", ""]
             }
+
+            const fixed_content = note["content"].replace("](assets:///","](./assets/")
 
             const name = date_ymd + " " + note["title"] + ".md"
 
@@ -85,7 +88,7 @@ class Timenote2Markdown {
             content += "weather: " + weatherMap[note["weather"]] + "\n"
             content += "mood: " + moodMap[note["mood"]] + "\n"
             content += "---\n"
-            content += note["content"]
+            content += fixed_content
             opt[name] = content
         })
         return opt
